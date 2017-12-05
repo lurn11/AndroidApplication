@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="in.studytitorial.hopefullyworks.Main2Activity">
+
+    <EditText
+        android:id="@+id/color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/model"
+        android:layout_below="@+id/model"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Color" />
+
+    <EditText
+        android:id="@+id/userid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="User ID"
+        android:layout_below="@+id/lastname"
+        android:layout_alignStart="@+id/licensePlate" />
+
+    <EditText
+        android:id="@+id/licensePlate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="License Plate Number"
+        android:layout_below="@+id/userid"
+        android:layout_alignStart="@+id/registeredstate"
+        android:layout_marginTop="12dp" />
+
+    <EditText
+        android:id="@+id/registeredstate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Registered State"
+        android:layout_below="@+id/licensePlate"
+        android:layout_alignStart="@+id/make" />
+
+    <EditText
+        android:id="@+id/make"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Make"
+        android:layout_below="@+id/registeredstate"
+        android:layout_centerHorizontal="true" />
+
+
+    <Button
+        android:id="@+id/button_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:onClick="submitContact"
+        android:text="SUBMIT"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/model"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Model"
+        android:layout_below="@+id/make"
+        android:layout_alignStart="@+id/make" />
+
+    <EditText
+        android:id="@+id/tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/color"
+        android:layout_below="@+id/color"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Tag Number" />
+
+    <EditText
+        android:id="@+id/firstname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/userid"
+        android:layout_marginTop="23dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="First Name" />
+
+    <EditText
+        android:id="@+id/lastname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Last Name"
+        android:layout_below="@+id/firstname"
+        android:layout_alignStart="@+id/firstname" />
+
+</RelativeLayout>
