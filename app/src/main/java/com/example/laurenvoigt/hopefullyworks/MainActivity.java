@@ -114,9 +114,9 @@ public class MainActivity extends AppCompatActivity{
                     public void onCompleted(
                             JSONObject json_object,
                             GraphResponse response) {
-                        if(getLogin() == true){
+                        if(getLogin() == false){
 
-                            Intent intent = new Intent(MainActivity.this, UserProfile.class);
+                            Intent intent = new Intent(MainActivity.this, MapsActivity.class);
                             //intent.putExtra("userProfile", json_object.toString());
                             startActivity(intent);
                         }
@@ -220,7 +220,6 @@ public class MainActivity extends AppCompatActivity{
     //Is this a post or a get?
     //200 vs. 500
     public boolean getLogin() {
-        Log.i("fuck","fuck");
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         //String url = "http://parkngo-api.azurewebsites.net/Login/Facebook/" + "1234";
@@ -254,8 +253,6 @@ public class MainActivity extends AppCompatActivity{
         });
 
         queue.add(stringRequest);
-        return result;
+        return true;
     }
-
-
 }

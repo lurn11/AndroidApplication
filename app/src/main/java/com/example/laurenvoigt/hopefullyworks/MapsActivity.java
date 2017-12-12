@@ -1,5 +1,6 @@
 package com.example.laurenvoigt.hopefullyworks;
 
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import android.util.Log;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import android.support.v7.app.AppCompatActivity;
@@ -59,22 +61,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         //Scott's stuff
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 //t.append("\n " + location.getLongitude() + " " + location.getLatitude());
-                addPoint(location.getLongitude(), location.getLatitude());
+                HttpURLConnectionExample http = new HttpURLConnectionExample();
 
+                JSONObject locationJson = new JSONObject();
+                try {
+                    locationJson.put("longitude", location.getLongitude());
+                    locationJson.put("latitude", location.getLatitude());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                //posting();
+                String info = locationJson.toString();
+                //String JsonString
+                AsyncTask<String, Void, String> returnedObj = http.execute("https://parkngo-api.azurewebsites.net/ParkingSpot/AvailableNearBy", location.getLongitude() +"/" +location.getLatitude(),"get");
+                Log.i("get spots", returnedObj.toString());
+                //JSONObject spotsJson = new JSONObject(getSpots("https://parkngo-api.azurewebsites.net/ParkingSpot/AvailableNearBy", location.getLongitude() +"/" +location.getLatitude()));
             }
 
             @Override
@@ -124,41 +135,44 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         */
         googleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        //googleMap.addMarker(new MarkerOptions().position(new LatLng(30.642075, -96.317176)).title("Parking Spot 1").snippet("Not filled"));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(30.642075, -96.317176)).title("Parking Spot 1").snippet("Not filled"));
 
-        //Marker m2 = googleMap.addMarker(new MarkerOptions().position(new LatLng(30.642106, -96.317131)).title("Parking Spot 2").snippet("Not Filled"));
+        Marker m2 = googleMap.addMarker(new MarkerOptions().position(new LatLng(30.642106, -96.317131)).title("Parking Spot 2").snippet("Not Filled"));
         //Marker m3 = googleMap.addMarker(new MarkerOptions().position(new LatLng(30.642137, -96.317088)).title("Parking Spot 3").snippet("Not Filled"));
 
         //change this to current location
-        CameraPosition Liberty = CameraPosition.builder().target(new LatLng(30.642075, -96.317176)).zoom(1).bearing(0).tilt(0).build();
+        CameraPosition Liberty = CameraPosition.builder().target(new LatLng(30.642075, -96.317176)).zoom(5).bearing(0).tilt(0).build();
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(Liberty));
 
     }
     public void addPoint(double lng, double lat){
-        mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat)));
+        //mMap.addMarker(new MarkerOptions().position(new LatLng(lng, lat)));
         Log.i("lng", Double.toString(lng));
         Log.i("lat", Double.toString(lat));
+        Log.i("addPoint","shit");
     }
 
-    public void getSpots() {
+    public String getSpots(String url, String location) {
         //final TextView mTextView = (TextView) findViewById(R.id.texttest);
-
+        final String result = "";
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://parkngo-api.azurewebsites.net/Zone/Get";
-        //String url="http://google.com";
-
+        String urlplusloc = url +"/" + location;
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlplusloc,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //mTextView.setText(response.toString());
-                        //mTextView.setText("Response is: " + response.substring(0, 24));
-                        //mTextView.setText("Response is: " + response.toString());
                         try {
-                            JSONArray jsonArray = new JSONArray(response.toString());
+                            JSONObject spotJson = new JSONObject(response.toString());
+                            Iterator keys = spotJson.keys();
+                            while (keys.hasNext()) {
+                                Object key = keys.next();
+                                JSONObject value = spotJson.getJSONObject((String) key);
+                                String longitude = value.getString("longitude");
+                                String latitude = value.getString("latitude");
+                                addPoint(Double.parseDouble(latitude),Double.parseDouble(longitude));                            }
+
                             Log.i("Get Spot Json: ",response.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -173,43 +187,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         queue.add(stringRequest);
+        return "";
     }
 
-    public void posting(final String currentLocation){
-        //final TextView mTextView = (TextView) findViewById(R.id.texttest2);
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://httpbin.org/post";
-        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response) {
-                        // response
-                        Log.d("Response", response);
-                        //mTextView.setText(response.toString());
-                        //mTextView.setText("Response is: " + response.toString());
-                    }
-                },
-                new Response.ErrorListener()
-                {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // error
-                        Log.d("Error.Response", error.toString());
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams()
-            {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("name", currentLocation);
-                params.put("domain", "http://parkngo-api.azurewebsites.net/api/values/hivalerie");
-
-                return params;
-            }
-        };
-        queue.add(postRequest);
-    }
 }
 
